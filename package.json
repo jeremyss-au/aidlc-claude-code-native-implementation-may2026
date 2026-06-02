@@ -1,0 +1,17 @@
+{
+  "name": "aidlc-claude-code-dev",
+  "version": "0.0.0",
+  "type": "module",
+  "private": true,
+  "description": "Dev-only tooling for the AIDLC framework — not part of the distributable. The shipped framework lives at aidlc-claude-code/.claude/ and is copied into user projects via `cp -r aidlc-claude-code/.claude/ your-project/.claude/` (see README.md). All framework hooks and tools run via bun without requiring this package; bun-types here only powers contributor LSP coverage.",
+  "author": "Amazon.com, Inc. or its affiliates",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/aws-samples/aidlc-claude"
+  },
+  "devDependencies": {
+    "bun-types": "^1.3.13",
+    "typescript": "^6.0.3"
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "compilerOptions": {
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "allowImportingTsExtensions": true,
+    "types": ["bun-types"]
+  },
+  "include": [
+    "aidlc-claude-code/.claude/hooks/*.ts",
+    "aidlc-claude-code/.claude/tools/*.ts",
+    "aidlc-claude-code/.claude/tools/data/*.json"
+  ]
+}

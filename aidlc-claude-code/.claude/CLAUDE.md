@@ -1,0 +1,62 @@
+# Project Name <!-- Replace with your project name -->
+
+This project uses AI-DLC (AI-Driven Development Life Cycle) for structured development. Run `/aidlc` followed by a scope or project description to begin. Run `/aidlc --init` to scaffold the full `aidlc-docs/` directory tree without starting a workflow (`--init --force` overwrites an existing workspace). Run `/aidlc --doctor` to validate your setup. Run `/aidlc --version` to print the framework version. Run `/aidlc --stage <slug>` to jump to a specific stage, `/aidlc --phase <name>` to jump to a phase, `/aidlc --depth <level>` to override depth, `/aidlc --test-strategy <level>` to override test volume, or `/aidlc --test-run` to auto-approve gates for CI/automated runs.
+
+## Prerequisites
+
+- **bun**: Required for CLI tools and hook scripts (state management, audit logging, jump orchestration). Install via `curl -fsSL https://bun.sh/install | bash`. On Windows: `npm install -g bun` or `powershell -c "irm bun.sh/install.ps1 | iex"`. Startup is ~20ms. **Important**: `bun` must be on your PATH for non-interactive shells. Claude Code runs your shell non-interactively, so it sources `~/.zshenv` (zsh) or `~/.bashrc` (bash) — NOT `~/.zshrc`. On Windows with Git Bash, `~/.bashrc` is the correct file. If `which bun` fails inside Claude Code, add the bun PATH export to the appropriate file.
+- **AWS Bedrock access**: The shipped `.claude/settings.json` defaults the orchestrator to Opus 4.8 with the 1M-context variant via AWS Bedrock (`us.anthropic.claude-opus-4-8`), sets `AWS_REGION` to `us-east-1`, and pins Bedrock model IDs for Opus, Sonnet, and Haiku. You need Bedrock model access enabled and AWS credentials on the default SDK credential chain to run the framework as shipped. If your region isn't `us-east-1`, override `AWS_REGION` in `.claude/settings.local.json`. Full setup (model access, IAM, credentials, region) is in `docs/guide/01-getting-started.md` § "AWS Bedrock Setup". If you use Claude via the Anthropic API directly (not Bedrock), copy `.claude/settings.local.json.example` to `.claude/settings.local.json` and set `CLAUDE_CODE_USE_BEDROCK` to `"0"` (or unset it) and override the `ANTHROPIC_DEFAULT_*_MODEL` env vars with Anthropic model IDs.
+- **MCP servers (optional)**: `.mcp.json` (project root, beside `.claude/`) declares the MCP servers available to the framework. `context7` (library/SDK documentation lookups) is an HTTP server that reads `CONTEXT7_API_KEY` from your environment. The four AWS servers (`aws-mcp`, `aws-pricing`, `aws-iac`, `aws-serverless`) launch via `uvx` and authenticate with your standard AWS credential chain — they require an AWS account with IAM credentials available to your shell (install `uv`/`uvx` via `curl -fsSL https://astral.sh/uv/install.sh | sh`). All credentials flow through environment passthrough; no keys are committed. Servers you have no credentials for are simply unavailable and never block a workflow. Declared servers are provisioned to the session and **inherited by every agent** — there is no per-agent grant; agents that should be prevented from using a server are narrowed via their `tools:` allowlist with fully-qualified `mcp__<server>__<tool>` ids.
+- **Locking**: Audit log file locking is handled portably using mkdir-based locking in the system temp directory (no external dependencies).
+- **Hook permissions**: All 9 hooks are TypeScript (`.ts`) and run via `bun`. No executable bits required — works identically on macOS, Linux, and native Windows PowerShell.
+- **Settings**: `.claude/settings.json` pre-approves tools (Read, Edit, Write, Bash, Glob, Grep, Task, WebSearch) so workflows run without per-call permission prompts.
+- **Personal overrides**: Copy `.claude/settings.local.json.example` to `.claude/settings.local.json` (gitignored) to override the model or set environment variables without affecting shared settings.
+
+## AI-DLC Structure
+
+- **Skill**: `.claude/skills/aidlc/` — Orchestrator (`SKILL.md`), stage protocol, and 32 stage files across 5 phase directories
+- **Session skills** (read-only, user-invocable): `.claude/skills/aidlc-session-cost/`, `.claude/skills/aidlc-replay/`, `.claude/skills/aidlc-outcomes-pack/` — typed as `/aidlc-session-cost`, `/aidlc-replay`, `/aidlc-outcomes-pack`. Each pulls every count from `bun .claude/tools/aidlc-runtime.ts summary --json` (no LLM-side counting). Classified `read-only`: they never advance the workflow stage pointer and never emit audit events. `aidlc-session-cost` and `aidlc-replay` print to the terminal only; `aidlc-outcomes-pack` is the only one that writes a file (`OUTCOMES.md`).
+- **Agents**: `.claude/agents/*.md` — 11 agent files prefixed `aidlc-<role>-agent.md` (product, design, delivery, architect, aws-platform, compliance, devsecops, developer, quality, pipeline-deploy, operations)
+- **Rules**: `.claude/rules/` — Flat layered files merging the previous `practices/` + `rules/` shape: `aidlc-org.md` (framework defaults + organisation-wide guardrails), `aidlc-team.md` (this team's affirmed practices), `aidlc-project.md` (project-specific specialisation), plus `aidlc-phase-<phase>.md` for ideation, inception, construction, and operation (initialization is bootstrap-only and ships no rule file). Practices-discovery's affirmation gate populates both `aidlc-team.md` AND `aidlc-project.md` from per-workflow drafts. Resolution is a strict-additive five-layer chain — `org → team → project → phase → stage` — where every applicable rule appears in `rules_in_context` at runtime; org/team/project attach to every stage by filename (universal defaults), and the matching phase rule attaches because the stage's frontmatter `phase: <name>` field is the pull import for `aidlc-phase-<name>.md`. Stage rules (`aidlc-stage-<slug>.md`) are reserved-for-future-use. Conflicts (narrower contradicting broader policy) are rejected at the memory gate (the §13 learning admission check) by a section-level LLM comparison against `aidlc-org.md` before the learning reaches disk; practices-discovery's promotion is a deterministic section-replace legitimised by the affirmation gate. See `docs/reference/01-architecture.md` § "Configuration layers" for the full routing principle and `docs/reference/08-rule-system.md` for the schema.
+- **Sensors**: `.claude/sensors/` — Deterministic verification manifests (advisory). Ships with framework defaults (`aidlc-required-sections.md`, `aidlc-upstream-coverage.md`, `aidlc-linter.md`, `aidlc-type-check.md`); forks may add custom `aidlc-<id>.md` manifests. Stages declare which sensors fire via the frontmatter `sensors: [<id>]` list — a pull import resolved at compile time. Manifests are pure capability descriptors (id, command, default_severity, optional `matches:` glob). The PostToolUse hook reads the compile-resolved `sensors_applicable` array off the stage graph node; matches comparison happens hook-side at fire time.
+- **Knowledge**: `.claude/knowledge/` — Methodology reference. Per-agent under `aidlc-<agent>-agent/` subfolders; `aidlc-shared/` holds cross-agent material. Ships with framework.
+- **Team Knowledge**: `aidlc-docs/knowledge/` — User-managed team and project knowledge (per-agent + cross-agent, scaffolded by `--init` or auto-created on workflow start).
+- **Tools**: `.claude/tools/` — Deterministic CLI tools (TypeScript, run via bun). All framework files prefixed `aidlc-*.ts`.
+  - `aidlc-sensor.ts` — fired by the framework's PostToolUse hook on Write/Edit matches; also human-callable for debugging. Subcommands: `list`, `describe <id>`, `fire <id> --stage <slug> --output-path <path>`.
+  - `aidlc-runtime.ts fragment-fork --slug <slug>` / `fragment-merge --slug <slug>` — manage the per-Bolt runtime-graph fragment lifecycle. Invoked by `aidlc-bolt.ts start --worktree` / `complete --merge` after the state-fork / state-merge + audit-fork / audit-merge steps. Mirrors the audit-fork / state-fork pattern. No new audit events — the fragment lifecycle rides on the existing STATE_FORKED + AUDIT_FORKED (fork) and STATE_MERGED + AUDIT_MERGED (merge) boundaries. The fragment file at `<worktree>/aidlc-docs/runtime-graph.json` is gitignored and removed by fragment-merge during `complete --merge` AND transitively by `git worktree remove` during `aidlc-worktree merge` / `discard` (defense-in-depth).
+  - `aidlc-learnings.ts surface --slug <slug>` / `persist --slug <slug> --selections-json <path>` — the §13 learning-gate tool (tool-as-actor). `surface` reads the stage's `memory.md` and emits structured candidates (Interpretations / Deviations / Tradeoffs) plus parked open questions; the orchestrator renders the AskUserQuestion + runs the admission conflict-check; `persist` writes confirmed learnings to the two-surface `.claude/rules/aidlc-project-learnings.md` (default) / `aidlc-team-learnings.md` files as dated entries, and for a sensor-binding learning does the two-write install (project-tier manifest + originating stage `sensors:` frontmatter) inside one `withAuditLock`. Emits `RULE_LEARNED` / `SENSOR_PROPOSED`. Skipped under `--test-run`. The `<slug>-selections.json` replay artefact lives under the gitignored `aidlc-docs/.aidlc-learnings/`.
+
+  **Stage-frontmatter edit boundary.** Stage files are now *framework-and-loop-edited*, not framework-only: the §13 learning loop is permitted to append a sensor id to a stage's `sensors:` frontmatter import list (the pull-authoring two-write install). That is the only sanctioned stage-file edit outside framework releases — the immutable `## Steps` / `## Sensors` / `## Learn` body is never touched; only the authored import list grows (immutable in shape, not in contents).
+- **Hooks**: `.claude/hooks/` — Framework hooks for audit emission, session lifecycle, state sync, state validation, subagent tracking, and statusline rendering. All framework files prefixed `aidlc-*.ts`.
+  - `aidlc-sensor-fire.ts` — PostToolUse hook on Write/Edit. Reads compile-resolved `sensors_applicable` for the active stage; spawns `aidlc-sensor.ts fire` per match. Advisory; never blocks.
+
+## Conventions
+
+- All artifacts go to `aidlc-docs/` under the workspace root
+- Each stage keeps an observation diary at `aidlc-docs/<phase>/<stage>/memory.md`, auto-created from a template at stage start and maintained by the orchestrator — never hand-edited
+- Application code goes to the workspace root
+- Use emojis as defined in skill/stage files — reproduce them exactly
+- Validate Mermaid diagram syntax before writing; include text fallback
+- Validate all generated content for character escaping issues
+
+## Documentation
+
+For full documentation, see `docs/guide/` (User Guide) and `docs/reference/` (Developer Reference).
+
+## Session Resumption
+
+On startup, check for `aidlc-docs/aidlc-state.md`. If found, load prior context and offer to resume from last checkpoint.
+
+## Automated Testing
+
+The `--test-run` flag (`/aidlc bugfix --test-run`) auto-approves all approval gates and question stages for automated testing. It is intended for CI/test environments only — not for interactive use. State tracking, audit logging, and artifact generation all continue normally.
+
+## Git Integration
+
+Commit `aidlc-docs/` (except `audit.md` and `.aidlc-recovery.md` which may contain sensitive data). Add these to `.gitignore`:
+- `aidlc-docs/audit.md`
+- `aidlc-docs/.aidlc-recovery.md`
+- `aidlc-docs/runtime-graph.json` (also covers per-Bolt worktree fragments at `<worktree>/aidlc-docs/runtime-graph.json` by relative-path glob semantics)
+- `aidlc-docs/.aidlc-hooks-health/`
+- `aidlc-docs/.aidlc-sensors/`
+- `.claude/settings.local.json`

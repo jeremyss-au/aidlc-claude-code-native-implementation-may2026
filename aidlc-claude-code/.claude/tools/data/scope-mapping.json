@@ -1,0 +1,111 @@
+{
+  "enterprise": {
+    "depth": "Comprehensive",
+    "keywords": [],
+    "description": "Regulated enterprise feature, full audit trail",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "EXECUTE", "market-research": "EXECUTE", "feasibility": "EXECUTE", "scope-definition": "EXECUTE", "team-formation": "EXECUTE", "rough-mockups": "EXECUTE", "approval-handoff": "EXECUTE",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "EXECUTE", "requirements-analysis": "EXECUTE", "user-stories": "EXECUTE", "refined-mockups": "EXECUTE", "application-design": "EXECUTE", "units-generation": "EXECUTE", "delivery-planning": "EXECUTE",
+      "functional-design": "EXECUTE", "nfr-requirements": "EXECUTE", "nfr-design": "EXECUTE", "infrastructure-design": "EXECUTE", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "EXECUTE",
+      "deployment-pipeline": "EXECUTE", "environment-provisioning": "EXECUTE", "deployment-execution": "EXECUTE", "observability-setup": "EXECUTE", "incident-response": "EXECUTE", "performance-validation": "EXECUTE", "feedback-optimization": "EXECUTE"
+    }
+  },
+  "feature": {
+    "depth": "Standard",
+    "keywords": [],
+    "description": "Default for new features, practical depth",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "EXECUTE", "market-research": "EXECUTE", "feasibility": "EXECUTE", "scope-definition": "EXECUTE", "team-formation": "EXECUTE", "rough-mockups": "EXECUTE", "approval-handoff": "EXECUTE",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "EXECUTE", "requirements-analysis": "EXECUTE", "user-stories": "EXECUTE", "refined-mockups": "EXECUTE", "application-design": "EXECUTE", "units-generation": "EXECUTE", "delivery-planning": "EXECUTE",
+      "functional-design": "EXECUTE", "nfr-requirements": "EXECUTE", "nfr-design": "EXECUTE", "infrastructure-design": "EXECUTE", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "EXECUTE",
+      "deployment-pipeline": "EXECUTE", "environment-provisioning": "EXECUTE", "deployment-execution": "EXECUTE", "observability-setup": "EXECUTE", "incident-response": "EXECUTE", "performance-validation": "EXECUTE", "feedback-optimization": "EXECUTE"
+    }
+  },
+  "mvp": {
+    "depth": "Standard",
+    "keywords": ["mvp", "minimum viable"],
+    "description": "Skip operations, ship the core",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "EXECUTE", "market-research": "SKIP", "feasibility": "EXECUTE", "scope-definition": "EXECUTE", "team-formation": "SKIP", "rough-mockups": "EXECUTE", "approval-handoff": "SKIP",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "EXECUTE", "requirements-analysis": "EXECUTE", "user-stories": "EXECUTE", "refined-mockups": "EXECUTE", "application-design": "EXECUTE", "units-generation": "EXECUTE", "delivery-planning": "EXECUTE",
+      "functional-design": "EXECUTE", "nfr-requirements": "EXECUTE", "nfr-design": "EXECUTE", "infrastructure-design": "EXECUTE", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "EXECUTE",
+      "deployment-pipeline": "SKIP", "environment-provisioning": "SKIP", "deployment-execution": "SKIP", "observability-setup": "SKIP", "incident-response": "SKIP", "performance-validation": "SKIP", "feedback-optimization": "SKIP"
+    }
+  },
+  "poc": {
+    "depth": "Minimal",
+    "keywords": ["proof of concept", "prototype", "poc", "spike"],
+    "description": "Prove feasibility fast",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "EXECUTE", "market-research": "SKIP", "feasibility": "SKIP", "scope-definition": "SKIP", "team-formation": "SKIP", "rough-mockups": "SKIP", "approval-handoff": "SKIP",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "SKIP", "requirements-analysis": "EXECUTE", "user-stories": "SKIP", "refined-mockups": "SKIP", "application-design": "SKIP", "units-generation": "SKIP", "delivery-planning": "SKIP",
+      "functional-design": "SKIP", "nfr-requirements": "SKIP", "nfr-design": "SKIP", "infrastructure-design": "SKIP", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "SKIP",
+      "deployment-pipeline": "SKIP", "environment-provisioning": "SKIP", "deployment-execution": "SKIP", "observability-setup": "SKIP", "incident-response": "SKIP", "performance-validation": "SKIP", "feedback-optimization": "SKIP"
+    }
+  },
+  "bugfix": {
+    "depth": "Minimal",
+    "keywords": ["fix", "bug", "broken"],
+    "description": "Fix a specific bug",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "SKIP", "market-research": "SKIP", "feasibility": "SKIP", "scope-definition": "SKIP", "team-formation": "SKIP", "rough-mockups": "SKIP", "approval-handoff": "SKIP",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "SKIP", "requirements-analysis": "EXECUTE", "user-stories": "SKIP", "refined-mockups": "SKIP", "application-design": "SKIP", "units-generation": "SKIP", "delivery-planning": "SKIP",
+      "functional-design": "SKIP", "nfr-requirements": "SKIP", "nfr-design": "SKIP", "infrastructure-design": "SKIP", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "SKIP",
+      "deployment-pipeline": "SKIP", "environment-provisioning": "SKIP", "deployment-execution": "SKIP", "observability-setup": "SKIP", "incident-response": "SKIP", "performance-validation": "SKIP", "feedback-optimization": "SKIP"
+    }
+  },
+  "refactor": {
+    "depth": "Minimal",
+    "keywords": ["refactor", "clean up", "simplify"],
+    "description": "Clean up existing code",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "SKIP", "market-research": "SKIP", "feasibility": "SKIP", "scope-definition": "SKIP", "team-formation": "SKIP", "rough-mockups": "SKIP", "approval-handoff": "SKIP",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "SKIP", "requirements-analysis": "EXECUTE", "user-stories": "SKIP", "refined-mockups": "SKIP", "application-design": "SKIP", "units-generation": "SKIP", "delivery-planning": "SKIP",
+      "functional-design": "EXECUTE", "nfr-requirements": "SKIP", "nfr-design": "SKIP", "infrastructure-design": "SKIP", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "SKIP",
+      "deployment-pipeline": "SKIP", "environment-provisioning": "SKIP", "deployment-execution": "SKIP", "observability-setup": "SKIP", "incident-response": "SKIP", "performance-validation": "SKIP", "feedback-optimization": "SKIP"
+    }
+  },
+  "infra": {
+    "depth": "Standard",
+    "keywords": ["infrastructure", "deploy", "infra"],
+    "description": "Infrastructure changes",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "SKIP", "market-research": "SKIP", "feasibility": "SKIP", "scope-definition": "SKIP", "team-formation": "SKIP", "rough-mockups": "SKIP", "approval-handoff": "SKIP",
+      "reverse-engineering": "SKIP", "practices-discovery": "EXECUTE", "requirements-analysis": "EXECUTE", "user-stories": "SKIP", "refined-mockups": "SKIP", "application-design": "SKIP", "units-generation": "SKIP", "delivery-planning": "SKIP",
+      "functional-design": "SKIP", "nfr-requirements": "EXECUTE", "nfr-design": "EXECUTE", "infrastructure-design": "EXECUTE", "code-generation": "SKIP", "build-and-test": "SKIP", "ci-pipeline": "EXECUTE",
+      "deployment-pipeline": "EXECUTE", "environment-provisioning": "EXECUTE", "deployment-execution": "EXECUTE", "observability-setup": "EXECUTE", "incident-response": "SKIP", "performance-validation": "SKIP", "feedback-optimization": "SKIP"
+    }
+  },
+  "security-patch": {
+    "depth": "Minimal",
+    "keywords": ["security", "CVE", "vulnerability", "patch"],
+    "description": "CVE response",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "SKIP", "market-research": "SKIP", "feasibility": "SKIP", "scope-definition": "SKIP", "team-formation": "SKIP", "rough-mockups": "SKIP", "approval-handoff": "SKIP",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "SKIP", "requirements-analysis": "SKIP", "user-stories": "SKIP", "refined-mockups": "SKIP", "application-design": "SKIP", "units-generation": "SKIP", "delivery-planning": "SKIP",
+      "functional-design": "SKIP", "nfr-requirements": "EXECUTE", "nfr-design": "SKIP", "infrastructure-design": "SKIP", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "SKIP",
+      "deployment-pipeline": "EXECUTE", "environment-provisioning": "SKIP", "deployment-execution": "EXECUTE", "observability-setup": "SKIP", "incident-response": "SKIP", "performance-validation": "SKIP", "feedback-optimization": "SKIP"
+    }
+  },
+  "workshop": {
+    "depth": "Standard",
+    "testStrategy": "Minimal",
+    "keywords": ["workshop", "lab", "training"],
+    "description": "Facilitated group session with mandatory gates",
+    "stages": {
+      "workspace-scaffold": "EXECUTE", "workspace-detection": "EXECUTE", "state-init": "EXECUTE",
+      "intent-capture": "SKIP", "market-research": "SKIP", "feasibility": "SKIP", "scope-definition": "SKIP", "team-formation": "SKIP", "rough-mockups": "SKIP", "approval-handoff": "SKIP",
+      "reverse-engineering": "EXECUTE", "practices-discovery": "EXECUTE", "requirements-analysis": "EXECUTE", "user-stories": "EXECUTE", "refined-mockups": "EXECUTE", "application-design": "EXECUTE", "units-generation": "EXECUTE", "delivery-planning": "EXECUTE",
+      "functional-design": "EXECUTE", "nfr-requirements": "EXECUTE", "nfr-design": "EXECUTE", "infrastructure-design": "EXECUTE", "code-generation": "EXECUTE", "build-and-test": "EXECUTE", "ci-pipeline": "EXECUTE",
+      "deployment-pipeline": "EXECUTE", "environment-provisioning": "EXECUTE", "deployment-execution": "EXECUTE", "observability-setup": "EXECUTE", "incident-response": "EXECUTE", "performance-validation": "EXECUTE", "feedback-optimization": "EXECUTE"
+    }
+  }
+}
